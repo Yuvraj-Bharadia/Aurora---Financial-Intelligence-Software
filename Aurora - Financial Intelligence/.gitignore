@@ -1,0 +1,69 @@
+# ── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.so
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# ── Environments and secrets ─────────────────────────────────────────────────
+.venv/
+venv/
+env/
+.env
+.env.local
+# .env.example IS tracked: it documents required keys with placeholder values.
+
+# ── Testing, linting, typing ─────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+.mypy_cache/
+.ruff_cache/
+
+# ── Notebooks ────────────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+
+# ── OS and editor ────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+.claude/
+
+# ── Run outputs and experiment tracking ──────────────────────────────────────
+outputs/
+mlruns/
+mlflow.db
+*.db
+cache/
+.cache/
+
+# ── Paper build artefacts (the PDF is produced by CI) ────────────────────────
+paper/paper.pdf
+paper/*.jats
+
+# ── Large study archives and result dumps ────────────────────────────────────
+# 72MB of these. Attach them to a GitHub Release or archive them on Zenodo
+# rather than committing them; GitHub warns above 50MB per file and refuses
+# above 100MB.
+*.tar.gz
+RSMoE_study/
+RSMoE_study_v2/
+
+# ── Not for a public repository ──────────────────────────────────────────────
+# Pre-filing patent material. Publishing this destroys novelty in absolute-novelty
+# jurisdictions and exposes the claim strategy. Keep it out of the repo.
+submissions/01-patent-CONFIDENTIAL/
+*Invention_Disclosure*
+*invention_disclosure*
+
+# Superseded paper drafts: provenance only, not for publication.
+submissions/_superseded/
+
+# The CJSJ manuscript is a separate submission to a separate venue. Tracking it
+# here is optional; uncomment to exclude it from the public software repository.
+# submissions/03-cjsj-research-paper/*.pdf

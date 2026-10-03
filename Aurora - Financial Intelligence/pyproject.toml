@@ -1,0 +1,158 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aurora-financial-intelligence"
+version = "0.1.0"
+description = "Adaptive Unified Regime-Oriented Research Architecture — institutional-grade quantitative research framework"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+authors = [{ name = "Aurora Research Team" }]
+
+dependencies = [
+    # Data ingestion
+    "yfinance>=0.2.36",
+    "alpha-vantage>=2.3.1",
+    "polygon-api-client>=1.13.0",
+    "fredapi>=0.5.1",
+    "requests>=2.31.0",
+    "aiohttp>=3.9.0",
+    "httpx>=0.27.0",
+
+    # Data handling
+    "pandas>=2.1.0",
+    "numpy>=1.26.0",
+    "polars>=0.20.0",
+    "pyarrow>=14.0.0",
+
+    # Econometric models
+    "statsmodels>=0.14.0",
+    "arch>=6.3.0",
+    "prophet>=1.1.5",
+    "hmmlearn>=0.3.0",
+
+    # Machine learning
+    "scikit-learn>=1.4.0",
+    "xgboost>=2.0.0",
+    "lightgbm>=4.2.0",
+    "catboost>=1.2.3",
+
+    # Deep learning
+    "torch>=2.2.0",
+    "pytorch-lightning>=2.2.0",
+    "transformers>=4.38.0",
+    "einops>=0.7.0",
+
+    # Sentiment / NLP
+    "sentence-transformers>=2.5.0",
+    "nltk>=3.8.1",
+    "spacy>=3.7.0",
+    "praw>=7.7.0",
+    "newsapi-python>=0.2.7",
+
+    # Hyperparameter optimization
+    "optuna>=3.5.0",
+    "optuna-integration>=3.6.0",
+
+    # Experiment tracking
+    "mlflow>=2.11.0",
+
+    # Backtesting & portfolio
+    "vectorbt>=0.26.0",
+    "empyrical>=0.5.5",
+    "pyfolio-reloaded>=0.9.5",
+    "cvxpy>=1.4.1",
+    "scipy>=1.12.0",
+
+    # Visualization
+    "plotly>=5.19.0",
+    "matplotlib>=3.8.0",
+    "seaborn>=0.13.0",
+    "dash>=2.16.0",
+    "streamlit>=1.32.0",
+    "kaleido>=0.2.1",
+    "shap>=0.44.0",
+
+    # API
+    "fastapi>=0.110.0",
+    "uvicorn[standard]>=0.28.0",
+    "pydantic>=2.6.0",
+    "pydantic-settings>=2.2.0",
+
+    # Utilities
+    "loguru>=0.7.2",
+    "rich>=13.7.0",
+    "typer>=0.11.0",
+    "python-dotenv>=1.0.0",
+    "joblib>=1.3.2",
+    "diskcache>=5.6.3",
+    "tqdm>=4.66.0",
+    "pytz>=2024.1",
+    "tenacity>=8.2.3",
+    "pyyaml>=6.0.1",
+    "toml>=0.10.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "pytest-cov>=4.1.0",
+    "pytest-mock>=3.12.0",
+    "mypy>=1.9.0",
+    "ruff>=0.3.0",
+    "black>=24.2.0",
+    "isort>=5.13.0",
+    "pre-commit>=3.6.0",
+    "ipykernel>=6.29.0",
+    "jupyterlab>=4.1.0",
+    "nbformat>=5.9.0",
+]
+
+notebooks = [
+    "jupyterlab>=4.1.0",
+    "ipywidgets>=8.1.0",
+    "plotly>=5.19.0",
+    "nbformat>=5.9.0",
+]
+
+[project.scripts]
+aurora-train = "aurora.pipelines.training:main"
+aurora-forecast = "aurora.pipelines.inference:main"
+aurora-backtest = "scripts.run_backtest:main"
+aurora-serve = "aurora.api.main:serve"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["aurora*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+select = ["E", "F", "W", "I", "N", "UP", "ANN", "S", "B", "C4", "PIE", "T20", "RET", "SIM"]
+ignore = ["ANN101", "ANN102", "ANN401", "S101", "S311"]
+
+[tool.black]
+line-length = 100
+target-version = ["py310", "py311", "py312"]
+
+[tool.isort]
+profile = "black"
+line_length = 100
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+ignore_missing_imports = true
+no_implicit_reexport = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+addopts = "-v --cov=aurora --cov-report=term-missing --cov-report=html"
+
+[tool.coverage.run]
+source = ["aurora"]
+omit = ["*/tests/*", "*/notebooks/*"]

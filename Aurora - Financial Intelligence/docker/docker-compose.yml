@@ -1,0 +1,106 @@
+version: "3.9"
+
+# Aurora full-stack development & research environment
+# Usage:
+#   docker compose up --build        # start everything
+#   docker compose up api            # API only
+#   docker compose up dashboard      # Streamlit only
+
+networks:
+  aurora_net:
+    driver: bridge
+
+volumes:
+  aurora_data:
+  aurora_models:
+  mlflow_data:
+
+services:
+  # ── Main API ───────────────────────────────────────────────────────────────
+  api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: aurora_api
+    command: uvicorn aurora.api.main:app --host 0.0.0.0 --port 8000 --workers 2
+    ports:
+      - "8000:8000"
+    environment:
+      - AURORA_ENV=production
+      - AURORA_LOG_LEVEL=INFO
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+    env_file:
+      - ../.env
+    volumes:
+      - aurora_data:/app/outputs/data
+      - aurora_models:/app/outputs/models
+    depends_on:
+      - mlflow
+    networks:
+      - aurora_net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # ── Streamlit Dashboard ────────────────────────────────────────────────────
+  dashboard:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: aurora_dashboard
+    command: streamlit run aurora/dashboard/app.py --server.port 8501 --server.address 0.0.0.0
+    ports:
+      - "8501:8501"
+    environment:
+      - AURORA_ENV=production
+    env_file:
+      - ../.env
+    volumes:
+      - aurora_data:/app/outputs/data
+      - aurora_models:/app/outputs/models
+    networks:
+      - aurora_net
+    restart: unless-stopped
+
+  # ── MLflow Tracking Server ─────────────────────────────────────────────────
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v2.11.0
+    container_name: aurora_mlflow
+    command: >
+      mlflow server
+        --backend-store-uri sqlite:///mlflow.db
+        --default-artifact-root /mlflow/artifacts
+        --host 0.0.0.0
+        --port 5000
+    ports:
+      - "5000:5000"
+    volumes:
+      - mlflow_data:/mlflow
+    networks:
+      - aurora_net
+    restart: unless-stopped
+
+  # ── Training worker (optional, run on demand) ──────────────────────────────
+  trainer:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: aurora_trainer
+    command: python -m aurora.pipelines.training --ticker SPY --deep-learning true
+    environment:
+      - AURORA_ENV=production
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+    env_file:
+      - ../.env
+    volumes:
+      - aurora_data:/app/outputs/data
+      - aurora_models:/app/outputs/models
+    depends_on:
+      - mlflow
+    networks:
+      - aurora_net
+    profiles:
+      - training   # only starts with: docker compose --profile training up

@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+title: "Aurora: Adaptive Unified Regime-Oriented Research Architecture"
+message: "If you use this software, please cite it as below."
+type: software
+authors:
+  - given-names: Yuvraj
+    family-names: Bharadia
+abstract: >-
+  A Python framework for regime-adaptive financial forecasting with
+  point-in-time data discipline, forward-only regime estimation whose
+  non-anticipation is enforced by executable test, and regime-conditioned
+  conformal prediction intervals.
+keywords:
+  - time series forecasting
+  - conformal prediction
+  - hidden Markov models
+  - regime switching
+  - reproducibility
+license: MIT
+version: 0.1.0
+date-released: 2026-09-29
