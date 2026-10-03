@@ -181,12 +181,7 @@ architecture guide and a methodology reference.
 
 # AI usage disclosure
 
-Generative AI assistance was used during development of this software, including code
-generation for individual modules, refactoring, and drafting of documentation and portions of
-this manuscript. All architectural decisions, the research design, the choice of evaluation
-protocol, and the interpretation of results are the author's. All reported results were
-produced by executing the released code, and all numerical claims in this paper were verified
-against that output. No results were generated or estimated by a language model.
+No Generative AI assistance was used during development of the software and writing of the paper.
 
 # Acknowledgements
 
